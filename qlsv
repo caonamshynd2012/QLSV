@@ -1,0 +1,365 @@
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+
+struct SINHVIEN
+{
+	int MSSV;
+	char Hoten[50];
+	float LTC;
+	float DTCB;
+	float NMKT;
+	float DTB;
+};
+// Nhap 1 Sinh Vien
+void Nhap1SV(SINHVIEN &sv) {
+	printf("\nNhap MSSV: ");
+	scanf("%d", &sv.MSSV);
+	getchar();
+	printf("\nNhap Ten: ");
+	gets_s(sv.Hoten);
+	
+	printf("\nNhap diem LTC: ");
+	scanf("%f", &sv.LTC);
+	printf("\nNhap diem DTCB: ");
+	scanf("%f", &sv.DTCB);
+	printf("\nNhap diem NMKT: ");
+	scanf("%f", &sv.NMKT);
+	sv.DTB = (sv.LTC + sv.DTCB + sv.NMKT)/3;
+}
+// Nhap 1 Danh Sach Sinh Vien
+void NhapDSSV(SINHVIEN sv[], int& n) {
+	system("cls");
+	printf("Nhap vao so Sinh Vien: ");
+	scanf("%d", &n);
+	for (size_t i = 0; i < n; i++)
+	{
+		printf("Nhap vao Sinh Vien thu %d: ", i+1);
+		Nhap1SV(sv[i]);
+	}
+}
+//Xuat 1 Sinh Vien
+void Xuat1SV(SINHVIEN sv) {
+	printf("%d\t%s\t%.1f\t%.1f\t%.1f\t%.1f\t\n", sv.MSSV, sv.Hoten, sv.LTC, sv.DTCB, sv.NMKT, sv.DTB);
+}
+//Xuat 1 Danh Sach Sinh Vien
+void XuatDSSV(SINHVIEN sv[], int n) {
+	for (size_t i = 0; i < n; i++)
+	{
+		Xuat1SV(sv[i]);
+	}
+}
+// Tim 1 Sinh Vien
+int TimSV(SINHVIEN sv[], int n, int mssv) {
+
+	for (size_t i = 0; i < n; i++)
+	{
+		if (sv[i].MSSV == mssv) return i;
+	}
+	return -1;
+}
+// Sua 1 Sinh Vien
+void Sua_SV(SINHVIEN sv[], int n) {
+	int mssv;
+	printf("Nhap MSSV: ");
+	scanf("%d", &mssv);
+	int vt = TimSV(sv, n, mssv);
+	if (vt < 0) {
+		printf("Khong tim thay sinh vien \n");
+	}
+	else {
+		printf("Thong tin cu: \n");
+		Xuat1SV(sv[vt]);
+		printf("Cap Nhat Lai Thong Tin");
+		Nhap1SV(sv[vt]);
+	}
+}
+// Them 1 Sinh Vien 
+void Them_SV(SINHVIEN sv[], int &n) {
+	if (n == 1000) {
+		printf("Het cho ! Khong the them !");
+	}
+	else {
+		Nhap1SV(sv[n]);
+		n++;
+	}
+}
+// Xoa 1 Sinh Vien
+void Xoa_SV(SINHVIEN sv[], int& n) {
+	int mssv;
+	printf("Nhap MSSV: ");
+	scanf("%d", &mssv);
+	if (n == 0) {
+		printf("Khong co SV de xoa!");
+	}
+	else {
+		int vt = TimSV(sv, n, mssv);
+		if (vt < 0) {
+			printf("Khong tim thay Sinh Vien !!!");
+		}
+		else {
+			for (size_t i = 0; i < n; i++)
+			{
+				sv[i] = sv[i + 1];
+			}
+			n--;
+		}
+	}
+}
+//Them_Xoa SV
+void Them_Xoa(SINHVIEN sv[], int& n) {
+	int choice;
+	do {
+		printf("Moi Ban Lua Chon: \n");
+		printf("1. Them\n");
+		printf("2.Xoa \n");
+		printf("Su Lua Chon Cua Ban: ");
+		scanf("%d", &choice);
+		switch (choice)
+		{
+		case 1:
+			Them_SV(sv, n);
+			break;
+		case 2:
+			Xoa_SV(sv, n);
+			break;
+		default:
+			break;
+		}
+
+	} while (choice != 1 && choice != 2);
+}
+// Tim Sinh Vien Diem Min/ Max
+// Tim diem max la bao nhieu ?
+int DIEM_MAX(SINHVIEN sv[], int n) {
+	int so = 0;
+	float max = roundf(sv[0].DTB * 10) / 10;
+	for (int i = 0; i < n; i++) {
+		if (roundf(sv[i].DTB * 10) / 10 > max) {
+			max = roundf(sv[i].DTB * 10) / 10;
+		}
+	}
+	return max;
+}
+// Tim cac sinh vien max
+void SV_DIEM_MAX(SINHVIEN sv[], int n) {
+	int max = DIEM_MAX(sv, n);
+	for (size_t i = 0; i < n; i++)
+	{
+		if (roundf(sv[i].DTB * 10) / 10 == max) {
+			Xuat1SV(sv[i]);
+		}
+	}
+}
+// Tim diem min la bao nhieu?
+int DIEM_MIN(SINHVIEN s[], int n) {
+	int a = 0;
+	float min = roundf(s[0].DTB * 10) / 10;
+	for (int i = 1; i < n; i++) {
+		if (roundf(s[i].DTB * 10) / 10 < min) {
+			min = roundf(s[i].DTB * 10) / 10;
+		}
+	}
+	return min;
+}
+// Tim xem co bao nhieu sinh vien diem min?
+void SV_DIEM_MIN(SINHVIEN sv[], int n) {
+	int min = DIEM_MIN(sv, n);
+	for (size_t i = 0; i < n; i++)
+	{
+		if (roundf(sv[i].DTB * 10) / 10 == min) {
+			Xuat1SV(sv[i]);
+		}
+	}
+}
+// Tim SV bang MSSV
+void Tim_Sinh_Vien(SINHVIEN s[], int n, int mssv) {
+
+	for (size_t i = 0; i < n; i++)
+	{
+		if (s[i].MSSV == mssv) {
+			Xuat1SV(s[i]);
+		}
+	}
+}
+// Liet Ke DTB >5?
+void Liet_Sinh_Vien_Lon_Hon_5(SINHVIEN s[], int n) {
+
+	for (size_t i = 0; i < n; i++)
+	{
+		if (s[i].DTB >= 5) {
+			Xuat1SV(s[i]);
+		}
+	}
+}
+// Liet Ke Tong Diem >20?
+void Liet_Ke_Tong_Diem(SINHVIEN s[], int n) {
+	int tong = 0;
+	for (size_t i = 0; i < n; i++)
+	{
+		tong = s[i].LTC * 2 + s[i].DTCB + s[i].NMKT;
+		if (tong >= 20) {
+			Xuat1SV(s[i]);
+		}
+	}
+}
+//----------------------------------- Hàm sắp xếp theo điểm
+void Sap_Xep_Theo_DTB(SINHVIEN sv[], int n) {
+	SINHVIEN temp;
+	for (size_t i = 0; i < n; i++)
+	{
+		for (size_t j = i + 1; j < n; j++)
+		{
+			if (roundf(sv[i].DTB * 10) / 10 < roundf(sv[j].DTB * 10) / 10) {
+				temp = sv[i];
+				sv[i] = sv[j];
+				sv[j] = temp;
+			}
+		}
+	}
+}
+//----------------------------------- Hàm sắp xếp theo MSSV
+void Sap_Xep_Theo_MSSV(SINHVIEN sv[], int n) {
+	SINHVIEN temp;
+	for (size_t i = 0; i < n; i++)
+	{
+		for (size_t j = i + 1; j < n; j++)
+		{
+			if (sv[i].MSSV > sv[j].MSSV) {
+				temp = sv[i];
+				sv[i] = sv[j];
+				sv[j] = temp;
+			}
+		}
+	}
+}
+void Nhap1SV_tufile(SINHVIEN& sv, FILE* fi) {
+	char tx[5];
+	fscanf(fi, "%d", &sv.MSSV);
+	fscanf(fi,"%s",&sv.Hoten);
+	fgets(tx, 5, fi);
+	fscanf(fi, "%f ", &sv.LTC);
+	fscanf(fi, "%f ", &sv.NMKT);
+	fscanf(fi, "%f ", &sv.DTCB);
+	sv.DTB = (sv.LTC + sv.NMKT + sv.DTCB) / 3;
+}
+void NhapSV_tufile(SINHVIEN sv[], int& n) {
+FILE* x;
+char tx[5];
+x = fopen("QLSV_abc.txt", "rt");
+fscanf(x, "%d\n", &n);
+//fgets(tx,5,fi);
+for (int i = 0; i < n; i++) {
+	Nhap1SV_tufile(sv[i], x);
+}
+fclose(x);
+}
+
+
+void XuatFileSV(SINHVIEN sv[], int N)
+{
+	FILE* f = fopen("DSSV.txt", "wt");
+	if (f == NULL)
+	{
+		printf("khong ghi duoc file\n");
+		return;
+	}
+	else printf("ghi duoc file\n");
+	fprintf(f, "MSSV\t\tHoTen\tLTC\tDTCB\tNMKt\tDTB\t");
+	for (int i = 0; i < N; i++)
+	{
+		fprintf(f, "\n%d\t%s\t%.2f\t%.2f\t%.2f\t%.2f", sv[i].MSSV, sv[i].Hoten, sv[i].LTC, sv[i].DTCB, sv[i].NMKT, sv[i].DTB);
+	}
+	fclose(f);
+}
+int main() {
+	int n;
+	SINHVIEN sv[1000];
+	int slsv = 0;
+	int option;
+	do {
+		system("cls");
+		printf("Moi Ban Lua Chon Chuc Nang\n");
+		printf("1. Nhap Danh Sach Sinh Vien *\n");
+		printf("2. Xuat Danh Sach Sinh Vien Ra Ngoai Man Hinh *\n");
+		printf("3. Chinh Sua Thong Tin Sinh Vien Bang Cach Nhap MSSV *\n");
+		printf("4. Them/Xoa Sinh Vien\n");
+		printf("5. Tim Sinh Vien Co Diem Trung Binh Cao Nhat, Thap Nhat *\n");
+		printf("6. Tim Thong Tin Sinh Vien Bang Cach Nhap Ma So *\n");
+		printf("7. Liet Ke Sinh Vien Co Diem Trung Binh Tren 5 *\n");
+		printf("8. Liet Ke Sinh Vien Co Diem Tong Lon Hon 20 *\n");
+		printf("9. Xep Danh Sach Sinh Vien Theo Ma So Tang Dan *\n");
+		printf("10. Xep Danh Sach Sinh Vien Theo DTB Giam Dan *\n");
+		printf("==========================================================\n");
+		printf("Su Lua Chon Cua Ban La: ");
+		scanf("%d", &option);
+		switch (option)
+		{
+		case 1:
+			NhapDSSV(sv, n);
+			break;
+		case 2:
+			XuatDSSV(sv, n);
+			system("pause");
+			break;
+		case 3:
+			Sua_SV(sv,n);
+			system("pause");
+			break;
+		case 4:
+			Them_Xoa(sv, n);
+			system("pause");
+			break;
+		case 5:
+			SV_DIEM_MAX(sv, n);
+			printf("\n ------------\n");
+			SV_DIEM_MIN(sv, n);
+			system("pause");
+			break;
+		case 6:
+			int mssv;
+			printf("Nhap vao MSSV: ");
+			scanf("%d", &mssv);
+			Tim_Sinh_Vien(sv, n, mssv);
+			system("pause");
+			break;
+		case 7:
+			Liet_Sinh_Vien_Lon_Hon_5(sv, n);
+			system("pause");
+			break;
+		case 8:
+			Liet_Ke_Tong_Diem(sv, n);
+			system("pause");
+			break;
+		case 9:
+			Sap_Xep_Theo_MSSV(sv, n);
+			XuatDSSV(sv, n);
+			system("pause");
+			break;
+		case 10:
+			Sap_Xep_Theo_DTB(sv, n);
+			XuatDSSV(sv, n);
+			system("pause");
+			break;
+		// Ghi File :
+		case 11:
+			NhapSV_tufile(sv, n);
+			system("pause");
+			break;
+		// Doc file :
+		case 12:
+			XuatFileSV(sv, n);
+			system("pause");
+			break;
+		default:
+			printf("Nhap Lai !");
+			break;
+		}
+	} while (option != 0);
+
+
+	getch();
+	return 0;
+}
